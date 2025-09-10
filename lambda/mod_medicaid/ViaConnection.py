@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import boto3
 import os
+import re
 from botocore.exceptions import ClientError
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
@@ -31,6 +32,10 @@ class ViaConnection:
         self._rider = None
         self._rider_id = None
         self._rider_hc = False
+        # self._rider_first_name = ''
+        # self._rider_last_name = ''
+        # self._rider_email = ''
+        # self._rider_phone = ''
 
         # instatiate the oauth flow by default
         # This shares the connection and reduces chatter
@@ -151,8 +156,15 @@ class ViaConnection:
         self._rider = rider
         self._rider_id = rider['rider_id']
         # self._rider_hc = rider.get('sub_services', {}).get('Health_Connector', False)
-        self._rider_hc = rider.get('sub_services', {}).get('nemt', False)
-        print("rider_hc",self._rider_hc)
+        # self._rider_hc = rider.get('sub_services', {}).get('NEMT', False)
+
+        # self._rider_first_name = rider.get('first_name', '')
+        # self._rider_last_name = rider.get('last_name', '')
+        # self._rider_email = rider.get('email_address', '')
+        # raw_phone = rider.get('e164_phone_number', '')
+        # clean_phone = re.sub(r'\D', '', raw_phone) 
+        # self._rider_phone = '+'+clean_phone
+        # print("rider_hc",self._rider_hc)
         print("calling set rider info done")
 
     def set_trip_params(self):
@@ -228,9 +240,16 @@ class ViaConnection:
             self.set_rider_info(payload=payload)
 
         # if they are qualified, use the Health Connector sub_service.
-        payload['sub_service'] = 'Health_Connector' if self._rider_hc else 'NEMT'
-        # payload['sub_service'] = 'nemt' if self._rider_hc else ''
+        # payload['sub_service'] = 'Health_Connector' if self._rider_hc else 'NEMT'
+        # payload['sub_service'] = 'NEMT' if self._rider_hc else ''
         # payload['sub_service'] = 'NEMT'
+        
+        # payload['passenger_info'] = {
+        #     'first_name': self._rider_first_name,
+        #     'last_name': self._rider_last_name,
+        #     'phone_number': self._rider_phone,
+        #     'email': self._rider_email
+        # }
         print("payload:",payload)
         # Request Trip Flow
         r_request = self._oauth.post(f'https://{self._secret['via_api_url']}/trips/request', json=payload)
