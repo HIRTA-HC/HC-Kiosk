@@ -73,7 +73,7 @@ export class AccountCheckTripComponent implements OnInit {
         email_address: this.ticketService.ticketInformation.personalInformation.email,
         sub_service: environment.hirta_via_account_name
       };
-
+      this.authService.refreshTokens();
       if (this.authService.validateToken(true)) {
         this.dataService.checkAPreviouslyKioskBookedTrip(payload, this.authService.idToken).subscribe({
           next: (trip_data: any) => {
@@ -91,13 +91,15 @@ export class AccountCheckTripComponent implements OnInit {
                   this.ticketService.checkError(this.translate.instant('Failed to get the rider - please check your personal information and try again!'));
                 else
                   console.error('Error parsing error data:', errorData);
-                  this.ticketService.checkError(errorData.message);
+                  // this.ticketService.checkError(errorData.message);
+                  this.ticketService.checkError(this.translate.instant('Error checking the trip! Please try again later!'));
               } catch (e) {
                 if(errorInfo.includes('No upcoming trips')){
                   this.ticketService.checkError(this.translate.instant('No upcoming trips.'));
                 }else{
                   console.error('Error parsing error info:', errorInfo);
-                  this.ticketService.checkError(errorInfo);
+                  // this.ticketService.checkError(errorInfo);
+                  this.ticketService.checkError(this.translate.instant('Error checking the trip! Please try again later!'));
                 }
 
               }

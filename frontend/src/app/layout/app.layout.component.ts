@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 
-import { AppLayoutService, TicketService } from '../core/services';
+import { AppLayoutService, TicketService, AppAuthService } from '../core/services';
 import { Router } from '@angular/router';
 
 import { GoogleAnalyticsService } from 'src/app/core/services/google-analytics.service';
@@ -40,7 +40,8 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
         private router: Router,
         protected gaService: GoogleAnalyticsService,
         private speechService: AppSpeechService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private authService: AppAuthService
     ) { }
 
     get containerClass() {
@@ -195,6 +196,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     }
 
     onBookTrip() {
+        this.authService.refreshTokens();
         this.ticketService.bookTrip = true;
         this.ticketService.initialCheck = true;
         this.ticketService.reset();
@@ -206,6 +208,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
     }
 
     onCheckTrip() {
+        this.authService.refreshTokens();
         this.ticketService.bookTrip = false;
         this.ticketService.initialCheck = true;
         this.ticketService.reset();

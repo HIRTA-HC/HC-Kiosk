@@ -193,6 +193,38 @@ export class AppAuthService {
     //         this.isAuthenticated = true;
     //     }
     // }
+    public async refreshTokens(): Promise<void> {
+        console.log("refresh tokens called")
+        try{
+            const session = await fetchAuthSession();
+            const newAccessToken = session.tokens?.accessToken?.toString();
+            const newIdToken = session.tokens?.idToken?.toString();
+            const claims = newIdToken ? JSON.parse(atob(newIdToken.split('.')[1])) : {};
+            const newdisplayName = claims["cognito:username"] || claims["email"] || 'Unknown'
+            if (!newAccessToken || !newIdToken || !newdisplayName){
+                this.lockScreen();
+                this.messageService.add({ severity: 'error', summary: "Session expired", detail: "Please log in again." });
+            }else{
+                this.isAuthenticated = true;
+                const authData: IAuthData = {
+                    token: newAccessToken,
+                    idToken: newIdToken,
+                    displayName: newdisplayName
+                }
+                localStorage.setItem(LocalStorageItems.authData, JSON.stringify(authData));
+                this.setAuth(authData.token);
+                this.isAuthenticated = true;
+                this.authChange.next(true);
+                this.userStatus.next(authData.displayName);
+                this.setTokens(authData.token, authData.idToken);
+            }
+        } catch (error) {
+            console.log("error while fetching user session:",error);
+            this.lockScreen();
+            this.messageService.add({ severity: 'error', summary: "Session expired", detail: "Please log in again." });
+
+        }
+    }
 
     public async restoreAuth(): Promise<void> {
         console.log("restore auth called")
@@ -202,9 +234,6 @@ export class AppAuthService {
             const newIdToken = session.tokens?.idToken?.toString();
             const claims = newIdToken ? JSON.parse(atob(newIdToken.split('.')[1])) : {};
             const newdisplayName = claims["cognito:username"] || claims["email"] || 'Unknown'
-            console.log('newAccessToken:',newAccessToken);
-            console.log('newIdtoken:',newIdToken);
-            console.log('displayName:',newdisplayName);
             if (!newAccessToken || !newIdToken || !newdisplayName){
                 this.lockScreen();
                 this.messageService.add({ severity: 'error', summary: "Session expired", detail: "Please log in again." });
@@ -255,7 +284,6 @@ export class AppAuthService {
     // validates a JWT from AWS
     public async validateToken(verifyOnly: boolean = false) {
         console.log("validate token function called");
-        console.log("idtoken:",this.idToken);
         let validated: boolean = false;
         
         // validate token
@@ -286,7 +314,6 @@ export class AppAuthService {
             //     this.router.navigate(["/"]);   
             // }
         } catch(err) {
-            console.log("validated value:",validated)
             console.log("token not validated:",err);
             // this.messageService.add({ severity: 'error', summary: "Authentication error", detail: "Please use AWS Login to re-authenticate." });
             this.messageService.add({ severity: 'error', summary: "Authentication error", detail: "Please Login again to re-authenticate. Session Expired" });
