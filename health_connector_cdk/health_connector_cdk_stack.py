@@ -33,7 +33,8 @@ class HealthConnectorCdkStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
         self.env_name = env_name
         
-        table_name = 'MOD_Medicaid'
+        # table_name = 'MOD_Medicaid'
+        table_name = 'Kiosk_MOD_Medicaid'
         table = dynamodb_.TableV2(
             self,
             'HealthConnectorMODMedicaidTable',
@@ -47,7 +48,8 @@ class HealthConnectorCdkStack(Stack):
             )
         )
 
-        table_name2 = 'MOD_Medicaid_History'
+        # table_name2 = 'MOD_Medicaid_History'
+        table_name2 = 'Kiosk_MOD_Medicaid_History'
         table2 = dynamodb_.TableV2(
             self,
             'HealthConnectorMODMedicaidHistoryTable',
@@ -231,27 +233,27 @@ class HealthConnectorCdkStack(Stack):
         )
 
         # this one is for Kiosk!!
-        # cloudfront_distribution = cloudfront_.Distribution(
-        #     self,
-        #     'HealthConnectorCloudFrontDistribution',
-        #     default_behavior=cloudfront_.BehaviorOptions(
-        #         origin=origins_.S3Origin(
-        #             bucket=bucket
-        #         ),
-        #         viewer_protocol_policy=cloudfront_.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
-        #     ),
-        #     domain_names=[
-        #         f'dashboard.{domain_name}'
-        #         # f'kiosk.hirta.us'
-        #     ],
-        #     certificate=us_east_1_certificate
-        # )
+        cloudfront_distribution = cloudfront_.Distribution(
+            self,
+            'HealthConnectorCloudFrontDistribution',
+            default_behavior=cloudfront_.BehaviorOptions(
+                origin=origins_.S3Origin(
+                    bucket=bucket
+                ),
+                viewer_protocol_policy=cloudfront_.ViewerProtocolPolicy.REDIRECT_TO_HTTPS
+            ),
+            # domain_names=[
+            #     # f'dashboard.{domain_name}'
+            #     f'kiosk.hirta.us'
+            # ],
+            # certificate=us_east_1_certificate
+        )
         s3_deployment_.BucketDeployment(
             self,
             'HealthConnectorKioskBucketDeployment',
             sources=[s3_deployment_.Source.asset('website/dist')],
             destination_bucket=bucket,
-            # distribution=cloudfront_distribution,
+            distribution=cloudfront_distribution,
         )
         # route53_.ARecord(
         #     self,
