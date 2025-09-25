@@ -26,6 +26,9 @@ HealthConnectorCdkStack(app, "HealthConnectorKioskCdkStack",
     env_name = "uat",
     env=cdk.Environment(account='340752826884', region='us-east-1'),
 
+    # env_name = "production",
+    # env=cdk.Environment(account='891377257073', region='us-west-1'),
+
     # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
     )
 
