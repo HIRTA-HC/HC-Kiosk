@@ -125,7 +125,7 @@ class ViaConnection:
         if len(rider_data) > 0:             
             return rider_data
         else:
-            raise ValueError("MOD/ATMS Error: You are not currently enrolled in HIRTA or Health Connector. Please check your personal information, call (877) 686-0029 or see the front desk to register.")
+            raise ValueError("MOD/ATMS Error: We were unable to match the information you provided to an existing HIRTA registration profile. Please call (877) 686-0029 or visit the front desk for assistance.")
 
     def _ping_via_for_rider(self, payload):
         print('calling _ping_via_for_rider func')
@@ -230,7 +230,7 @@ class ViaConnection:
             trip_id = request_data['trips'][0].get('trip_id')
             return self.via_book_trip(trip_id)
         else:
-            raise SystemError(f'MOD/ATMS Error: {json.dumps(request_data.json())}')
+            raise SystemError(f'MOD/ATMS Error: {json.dumps(request_data)}')
 
     # request a trip
     def via_request_trip(self, payload):
