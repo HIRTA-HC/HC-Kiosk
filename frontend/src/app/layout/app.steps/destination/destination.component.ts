@@ -94,13 +94,27 @@ export class DestinationComponent implements OnInit {
               trip_data[0] = trip_data[0].replace('MOD/ATMS Error:', '');
             }
             // let errorInfo = JSON.parse(trip_data[0].replace('MOD/ATMS Error:', ''));
-            let errorInfo = JSON.parse(trip_data[0]);
+            let errorInfo: any;
+            try {
+              errorInfo = JSON.parse(trip_data[0]);
+            } catch {
+              // Non-JSON error message (e.g. rider not enrolled)
+              if (trip_data[0].includes('unable to match the information')) {
+                this.ticketService.destinationError(this.translate.instant(`We were unable to match the information you provided to an existing HIRTA registration profile. Please call (877) 686-0029 or visit the front desk for assistance.`));
+              } else {
+                this.ticketService.destinationError(this.translate.instant('Error booking the trip! Please try again later!'));
+              }
+              this.booking = false;
+              return;
+            }
             if (errorInfo.info) {
               console.log("error while booking trip:",JSON.stringify(errorInfo));
               if (errorInfo.message === 'NoSuchRiderError'){
-                this.ticketService.destinationError(this.translate.instant(`You are not currently enrolled in Health Connector service. Please call (877) 686-0029 or see the front desk to register.`));
+                this.ticketService.destinationError(this.translate.instant(`We were unable to match the information you provided to an existing HIRTA registration profile. Please call (877) 686-0029 or visit the front desk for assistance.`));
               } else if(errorInfo.message === 'DestinationOutOfZone') {
                 this.ticketService.destinationError(this.translate.instant(`Destination out of service area.`));
+              } else if(errorInfo.message === 'NoAvailableSeats') {
+                this.ticketService.destinationError(this.translate.instant(`No vehicle is currently available for your trip. Please try again later.`));
               } else {
                 // this.ticketService.destinationError(errorInfo.info);
                 this.ticketService.destinationError(this.translate.instant('Error booking the trip! Please try again later!'));
@@ -118,12 +132,26 @@ export class DestinationComponent implements OnInit {
             this.dataService.bookKioskTripDetails(trip_id, this.authService.idToken).subscribe({
               next: (trip_data_details: any) => {
                 if (Array.isArray(trip_data_details)) {
-                  let errorInfo = JSON.parse(trip_data_details[0].replace('MOD/ATMS Error:', ''));
+                  let errorInfo: any;
+                  try {
+                    errorInfo = JSON.parse(trip_data_details[0].replace('MOD/ATMS Error:', ''));
+                  } catch {
+                    // Non-JSON error message (e.g. rider not enrolled, missing trip_id)
+                    if (trip_data_details[0].includes('unable to match the information')) {
+                      this.ticketService.destinationError(this.translate.instant(`We were unable to match the information you provided to an existing HIRTA registration profile. Please call (877) 686-0029 or visit the front desk for assistance.`));
+                    } else {
+                      this.ticketService.destinationError(this.translate.instant('Error booking the trip! Please try again later!'));
+                    }
+                    this.booking = false;
+                    return;
+                  }
                   if (errorInfo.info) {
                     if (errorInfo.message === 'NoSuchRiderError'){
-                      this.ticketService.destinationError(this.translate.instant(`You are not currently enrolled in Health Connector service. Please call (877) 686-0029 or see the front desk to register.`));
+                      this.ticketService.destinationError(this.translate.instant(`We were unable to match the information you provided to an existing HIRTA registration profile. Please call (877) 686-0029 or visit the front desk for assistance.`));
                     } else if(errorInfo.message === 'DestinationOutOfZone') {
                       this.ticketService.destinationError(this.translate.instant(`Destination out of service area.`));
+                    } else if(errorInfo.message === 'NoAvailableSeats') {
+                      this.ticketService.destinationError(this.translate.instant(`No vehicle is currently available for your trip. Please try again later.`));
                     } else {
                       this.ticketService.destinationError(this.translate.instant('Error booking the trip! Please try again later!'));
                       // this.ticketService.destinationError(errorInfo.info);
