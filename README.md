@@ -1,4 +1,4 @@
-# MOD-Medicaid
+# Kiosk
 
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
@@ -7,46 +7,39 @@
 <br />
 <div align="center">
 
-  <h3 align="center">MOD-Medicaid</h3>
+  <h3 align="center">Kiosk</h3>
 
   <p align="center">
-    Documentation for Health Connector's MOD-Medicaid middleware product can be found in the repository's <a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki"><strong>Wiki Page»</strong></a>.
+    Documentation for Health Connector's kiosk can be found in the repository's <a href="https://github.com/HIRTA-HC/HC-Kiosk/wiki"><strong>Wiki Page»</strong></a>.
     <br />
-    <a href="https://github.com/HIRTA-HC/MOD-Medicaid"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/HIRTA-HC/HC-Kiosk"><strong>Explore the docs »</strong></a>
     <br />
   </p>
 </div>
 
+# HIRTA Health Connector Kiosk — Documentation
 
+The Health Connector Kiosk is a touch-screen kiosk application that lets riders book and check
+non-emergency medical transportation trips through HIRTA. It runs on an Angular frontend served from S3/CloudFront, backed by an AWS
+Lambda + API Gateway + DynamoDB stack.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#about-the-project">Product Overview</a>
-      <ul>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#focus-of-the-product">Focus of the Product</a></li>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#dev-community">Dev Community</a></li>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#stakeholders">Project Stakeholders</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#product-design">Product Design</a>
-      <ul>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#data-access">Data Access</a></li>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#data-management">Data Management</a></li>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#data-storage">Data Storage</a></li>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#user-interface">User Interface</a></li>
-      </ul>
-    </li>
-    <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#tech-stack">Tech Stack</a></li>
-    <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#deployment">Deployment</a></li>
-      <ul>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#hardware">Hardware</a></li>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#cloud-infrastructure">Cloud Infrastructure</a></li>
-        <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#software-environment">Software Environment</a></li>
-      </ul>
-    <li><a href="https://github.com/HIRTA-HC/MOD-Medicaid/wiki#reference-links">Reference Links</a></li>
-  </ol>
-</details>
+## Contents
+
+- [Architecture](architecture.md) — how the pieces fit together
+- [Setup](setup.md) — get a local dev environment running
+- [Deployment](deployment.md) — deploy the CDK stack and publish the frontend
+- [Frontend](frontend.md) — Angular app structure and key flows
+- [Backend](backend.md) — Lambda handlers, API routes, and data storage
+- [User Guide](user-guide/README.md) — how kiosk operators and riders use the app
+
+## Repo layout
+
+| Path | Purpose |
+|---|---|
+| `frontend/` | Angular kiosk UI |
+| `lambda/` | Backend Lambda source (`health_connector.py` is the active handler) |
+| `health_connector_cdk/` | AWS CDK stack definition |
+| `app.py` | CDK app entry point / environment selection |
+| `website/dist/` | Built frontend assets staged for S3 deployment |
+| `Kiosk_setup.txt` | Original raw setup notes (superseded by [setup.md](setup.md)) |
+
