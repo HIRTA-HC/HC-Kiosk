@@ -25,12 +25,12 @@ Lambda + API Gateway + DynamoDB stack.
 
 ## Contents
 
-- [Architecture](architecture.md) — how the pieces fit together
-- [Setup](setup.md) — get a local dev environment running
-- [Deployment](deployment.md) — deploy the CDK stack and publish the frontend
-- [Frontend](frontend.md) — Angular app structure and key flows
-- [Backend](backend.md) — Lambda handlers, API routes, and data storage
-- [User Guide](user-guide/README.md) — how kiosk operators and riders use the app
+- [Architecture](documentation/architecture.md) — how the pieces fit together
+- [Setup](documentation/setup.md) — get a local dev environment running
+- [Deployment](documentation/deployment.md) — deploy the CDK stack and publish the frontend
+- [Frontend](documentation/frontend.md) — Angular app structure and key flows
+- [Backend](documentation/backend.md) — Lambda handlers, API routes, and data storage
+- [User Guide](documentation/user-guide/README.md) — how kiosk operators and riders use the app
 
 ## Repo layout
 
@@ -41,5 +41,5 @@ Lambda + API Gateway + DynamoDB stack.
 | `health_connector_cdk/` | AWS CDK stack definition |
 | `app.py` | CDK app entry point / environment selection |
 | `website/dist/` | Built frontend assets staged for S3 deployment |
-| `Kiosk_setup.txt` | Original raw setup notes (superseded by [setup.md](setup.md)) |
+| `Kiosk_setup.txt` | Original raw setup notes (superseded by [setup.md](documentation/setup.md)) |
 
